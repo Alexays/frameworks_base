@@ -213,4 +213,7 @@
 
     <!-- Custom styles -->
     <java-symbol type="style" name="CustomThemeDeviceDefaultDialogAlert" />
+
+    <!-- Facola View -->
+    <java-symbol type="bool" name="config_needCustomFacolaView" />
 </resources>

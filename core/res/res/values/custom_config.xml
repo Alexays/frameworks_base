@@ -297,4 +297,7 @@
     <!-- Whether device has oled display -->
     <bool name="config_hasOledDisplay">false</bool>
 
+    <!-- Show a custom view for Facola -->
+    <bool name="config_needCustomFacolaView">false</bool>
+
 </resources>

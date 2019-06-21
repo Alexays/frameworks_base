@@ -55,6 +55,7 @@ public abstract class AuthenticationClient extends ClientMonitor {
     protected boolean mDialogDismissed;
 
     private FacolaView mFacola;
+    private boolean mNeedFacola;
 
     // Receives events from SystemUI and handles them before forwarding them to FingerprintDialog
     protected IBiometricPromptReceiver mDialogReceiver = new IBiometricPromptReceiver.Stub() {
@@ -99,6 +100,7 @@ public abstract class AuthenticationClient extends ClientMonitor {
         mFingerprintManager = (FingerprintManager) getContext()
                 .getSystemService(Context.FINGERPRINT_SERVICE);
         mFacola = new FacolaView(context);
+        mNeedFacola = context.getResources().getBoolean(com.android.internal.R.bool.config_needCustomFacolaView);
     }
 
     @Override
@@ -236,7 +238,9 @@ public abstract class AuthenticationClient extends ClientMonitor {
             resetFailedAttempts();
             onStop();
         }
-        if(result == true) mFacola.hide();
+        if(result == true && mNeedFacola) {
+           mFacola.hide();
+        }
         return result;
     }
 
@@ -250,7 +254,9 @@ public abstract class AuthenticationClient extends ClientMonitor {
             Slog.w(TAG, "start authentication: no fingerprint HAL!");
             return ERROR_ESRCH;
         }
-        mFacola.show();
+        if (mNeedFacola) {
+            mFacola.show();
+        }
         onStart();
         try {
             final int result = daemon.authenticate(mOpId, getGroupId());
@@ -284,7 +290,9 @@ public abstract class AuthenticationClient extends ClientMonitor {
             return 0;
         }
 
-        mFacola.hide();
+        if (mNeedFacola) {
+            mFacola.hide();
+        }
         onStop();
         IBiometricsFingerprint daemon = getFingerprintDaemon();
         if (daemon == null) {
