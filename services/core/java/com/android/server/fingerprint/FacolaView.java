@@ -114,9 +114,9 @@ public class FacolaView extends ImageView implements OnTouchListener {
         //TODO w!=h?
         if(mInsideCircle) {
             canvas.drawCircle(mW/2, mH/2, (float) (mW/2.0f), this.mPaintFingerprint);
+            setDim(true);
             try {
                 int nitValue = 3;
-                setDim(true);
                 if(mXiaomiFingerprint != null) {
                     try {
                         mXiaomiFingerprint.extCmd(0xa, nitValue);
@@ -160,6 +160,10 @@ public class FacolaView extends ImageView implements OnTouchListener {
     }
 
     public void show() {
+        show(false);
+    }
+
+    public void show(boolean isEnrolling) {
         if(mX == -1 || mY == -1 || mW == -1 || mH == -1) return;
 
         for (String animationPreference : TOGGLE_ANIMATION_TARGETS) {
@@ -193,6 +197,9 @@ public class FacolaView extends ImageView implements OnTouchListener {
 
         mParams.gravity = Gravity.TOP | Gravity.LEFT;
         mWM.addView(this, mParams);
+        if (isEnrolling) {
+            setDim(false);
+        }
         visible = true;
 
     }

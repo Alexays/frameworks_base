@@ -95,7 +95,7 @@ public abstract class EnrollClient extends ClientMonitor {
         Slog.w(TAG, "Starting enroll");
 
         if (mNeedFacola) {
-            mFacola.show();
+            mFacola.show(true);
         }
 
         final int timeout = (int) (ENROLLMENT_TIMEOUT_MS / MS_PER_SEC);
