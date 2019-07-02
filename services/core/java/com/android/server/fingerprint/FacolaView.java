@@ -21,6 +21,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.content.Context;
 import android.hardware.display.DisplayManager;
+import com.android.systemui.doze.DozeMachine;
 import android.view.View.OnTouchListener;
 import android.view.View;
 import android.provider.Settings;
@@ -64,6 +65,7 @@ public class FacolaView extends ImageView implements OnTouchListener {
 
     private final WindowManager mWM;
     private final DisplayManager mDisplayManager;
+    private final DozeMachine.Service mDozeService;
     private final Context mContext;
 
     FacolaView(Context context) {
@@ -105,6 +107,7 @@ public class FacolaView extends ImageView implements OnTouchListener {
         }
 
         mDisplayManager = context.getSystemService(DisplayManager.class);
+        mDozeService = context.getSystemService(DozeMachine.Service.class);
     }
 
     @Override
@@ -245,10 +248,13 @@ public class FacolaView extends ImageView implements OnTouchListener {
             mParams.dimAmount = dimAmount;
             mWM.updateViewLayout(this, mParams);
             mDisplayManager.setTemporaryBrightness(255);
+            mDozeService.setDozeScreenBrightness(255);
         } else {
             mParams.dimAmount = .0f;
             mWM.updateViewLayout(this, mParams);
             mDisplayManager.setTemporaryBrightness(curBrightness);
+            mDozeService.setDozeScreenBrightness(mContext.getResources().getInteger(
+                    com.android.internal.R.integer.config_screenBrightnessDoze));
             Settings.System.putIntForUser(mContext.getContentResolver(),
                     Settings.System.SCREEN_BRIGHTNESS, curBrightness, UserHandle.USER_CURRENT);
         }
